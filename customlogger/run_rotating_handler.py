@@ -5,7 +5,6 @@ import os
 import re
 from datetime import datetime
 
-
 # }}}
 
 
@@ -17,7 +16,8 @@ class RunRotatingHandler(logging.FileHandler):
         filepath = self.__getRotatingFilePath(dir_path, backup_count)
         super().__init__(filepath)
 
-    def __getRotatingFilePath(self, dir_path, backup_count=None):  # {{{1
+    @staticmethod  # __getRotatingFilePath {{{1
+    def __getRotatingFilePath(dir_path, backup_count=None):
         # If set roting file path, return the filepath
         if RunRotatingHandler.__rotatingFilePath:
             return RunRotatingHandler.__rotatingFilePath
@@ -48,8 +48,6 @@ class RunRotatingHandler(logging.FileHandler):
 
 
 if __name__ == '__main__':  # {{{1
-    import logging
-
     logger = logging.getLogger()
     run_handler = RunRotatingHandler('test')
     logger.addHandler(run_handler)
