@@ -61,7 +61,7 @@ class SlackHandler(logging.Handler):
     def emit(self, record):  # {{{1
         try:
             requests.post(self.__webhook_url, json=self.makeContent(record))
-        except:
+        except Exception:
             self.handleError(record)
 
     # }}} 1
