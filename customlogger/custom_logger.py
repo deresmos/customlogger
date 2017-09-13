@@ -5,7 +5,6 @@ import os
 from customlogger.only_filter import OnlyFilter
 from customlogger.run_rotating_handler import RunRotatingHandler
 
-
 # }}}
 
 
@@ -173,18 +172,3 @@ class CustomLogger:
 
 
 # }}}1
-
-#  main {{{1
-if __name__ == '__main__':
-    CustomLogger.setLogDirPath('./log')
-    CustomLogger.setStreamLevel(CustomLogger.ERROR)
-    CustomLogger.saveLog()
-    # CustomLogger.isSaveLog = True
-    logger = CustomLogger()
-    logger = logger.logger
-    logger.error('aaa')
-    logger.debug('debug test')
-    logger.info('info test')
-    logger.warning('warning test')
-    logger1 = CustomLogger(logger_name='logger name').logger
-    logger1.info('info test2')
