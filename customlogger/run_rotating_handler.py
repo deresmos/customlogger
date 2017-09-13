@@ -48,8 +48,6 @@ class RunRotatingHandler(logging.FileHandler):
 
 
 if __name__ == '__main__':  # {{{1
-    import logging
-
     logger = logging.getLogger()
     run_handler = RunRotatingHandler('test')
     logger.addHandler(run_handler)
