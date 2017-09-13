@@ -17,7 +17,8 @@ class RunRotatingHandler(logging.FileHandler):
         filepath = self.__getRotatingFilePath(dir_path, backup_count)
         super().__init__(filepath)
 
-    def __getRotatingFilePath(self, dir_path, backup_count=None):  # {{{1
+    @staticmethod  # __getRotatingFilePath {{{1
+    def __getRotatingFilePath(dir_path, backup_count=None):
         # If set roting file path, return the filepath
         if RunRotatingHandler.__rotatingFilePath:
             return RunRotatingHandler.__rotatingFilePath

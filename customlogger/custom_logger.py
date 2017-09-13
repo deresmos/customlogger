@@ -85,7 +85,8 @@ class CustomLogger:
 
         self.defaultLoggerSetting()
 
-    def __checkLoggerLists(self, logger):  # {{{2
+    @staticmethod  # __checkLoggerLists {{{2
+    def __checkLoggerLists(logger):
         id_ = id(logger)
         if id_ in CustomLogger.__loggerLists:
             return True
@@ -93,7 +94,8 @@ class CustomLogger:
         CustomLogger.__loggerLists.append(id_)
         return False
 
-    def __createLogDir(self, path=None):  # {{{2
+    @staticmethod  # __createLogDir {{{2
+    def __createLogDir(path=None):
         path = path or CustomLogger.logDirPath
         if os.path.isdir(path):
             return
