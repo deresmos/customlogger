@@ -1,4 +1,5 @@
 import logging
+import os
 
 import requests
 
@@ -28,13 +29,13 @@ class SlackHandler(logging.Handler):
 
     def __init__(  # {{{1
             self,
-            webhook_url,
+            webhook_url=None,
             channel=None,
             username=None,
             emojis=None,
             fmt='[%(levelname)s] [%(asctime)s] [%(name)s] - %(message)s'):
         super().__init__()
-        self.__webhook_url = webhook_url
+        self.__webhook_url = webhook_url or os.getenv('WEBHOOK_URL')
         self.__channel = channel
         self.__username = username
         self.__emojis = emojis or SlackHandler.EMOJIS
