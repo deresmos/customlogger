@@ -36,6 +36,8 @@ class SlackHandler(logging.Handler):
             fmt='[%(levelname)s] [%(asctime)s] [%(name)s] - %(message)s'):
         super().__init__()
         self.__webhook_url = webhook_url or os.getenv('WEBHOOK_URL')
+        if not self.__webhook_url:
+            return None
         self.__channel = channel
         self.__username = username
         self.__emojis = emojis or SlackHandler.EMOJIS
