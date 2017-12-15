@@ -70,8 +70,8 @@ class CustomLogger:
         return False
 
     @staticmethod  # __createLogDir {{{2
-    def __createLogDir(path=None):
-        path = expanduser(path or self.logDirPath)
+    def __createLogDir(path):
+        path = expanduser(path)
         if os.path.isdir(path):
             return
 
@@ -93,7 +93,7 @@ class CustomLogger:
             CustomLogger.INFO, is_only=True, check_level=True)
 
         if self.isSaveLog:
-            self.__createLogDir()
+            self.__createLogDir(self.logDirPath)
             self.addFileHandler(CustomLogger.DEBUG)
             self.addRunRotatingHandler(CustomLogger.DEBUG, self.backupCount)
 
