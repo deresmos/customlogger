@@ -1,6 +1,7 @@
 # imports {{{1
 import logging
 import os
+from os.path import expanduser
 
 from customlogger.only_filter import OnlyFilter
 from customlogger.run_rotating_handler import RunRotatingHandler
@@ -69,7 +70,7 @@ class CustomLogger:
 
     @staticmethod  # __createLogDir {{{2
     def __createLogDir(path=None):
-        path = path or self.logDirPath
+        path = expanduser(path or self.logDirPath)
         if os.path.isdir(path):
             return
 
@@ -120,7 +121,7 @@ class CustomLogger:
 
     def addFileHandler(  # {{{2
             self, level, out_path=None, fmt=None, is_only=False):
-        out_path = out_path or self.allLogFilePath
+        out_path = expanduser(out_path or self.allLogFilePath)
         handler = logging.FileHandler(out_path)
         fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
@@ -145,7 +146,7 @@ class CustomLogger:
             out_path=None,
             fmt=None,
             is_only=False):
-        out_path = out_path or self.logDirPath
+        out_path = expanduser(out_path or self.logDirPath)
         handler = RunRotatingHandler(out_path, backup_count)
         fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
