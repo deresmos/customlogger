@@ -69,7 +69,7 @@ class CustomLogger:
 
     @staticmethod  # __createLogDir {{{2
     def __createLogDir(path=None):
-        path = path or CustomLogger.logDirPath
+        path = path or self.logDirPath
         if os.path.isdir(path):
             return
 
@@ -86,15 +86,15 @@ class CustomLogger:
     def defaultLoggerSetting(self):  # {{{2
         self.__logger.setLevel(CustomLogger.DEBUG)
         fmt = self.streamLogFmt
-        self.addStreamHandler(CustomLogger.level, fmt=fmt)
+        self.addStreamHandler(self.level, fmt=fmt)
         self.addStreamHandler(
             CustomLogger.INFO, is_only=True, check_level=True)
 
-        if CustomLogger.isSaveLog:
+        if self.isSaveLog:
             self.__createLogDir()
             self.addFileHandler(CustomLogger.DEBUG)
             self.addRunRotatingHandler(CustomLogger.DEBUG,
-                                       CustomLogger.backupCount)
+                                       self.backupCount)
 
     def addHandler(  # {{{2
             self, handler, level, fmt=None, datefmt=None, is_only=False):
@@ -111,18 +111,18 @@ class CustomLogger:
 
     def addStreamHandler(  # {{{2
             self, level, fmt=None, is_only=False, check_level=False):
-        if check_level and CustomLogger.level <= level:
+        if check_level and self.level <= level:
             return
 
         handler = logging.StreamHandler()
-        fmt = fmt or CustomLogger.streamLogFmt
+        fmt = fmt or self.streamLogFmt
         self.addHandler(handler, level, fmt=fmt, is_only=is_only)
 
     def addFileHandler(  # {{{2
             self, level, out_path=None, fmt=None, is_only=False):
-        out_path = out_path or CustomLogger.allLogFilePath
+        out_path = out_path or self.allLogFilePath
         handler = logging.FileHandler(out_path)
-        fmt = fmt or CustomLogger.fileLogFmt
+        fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
 
     def addRotatingFileHandler(  # {{{2
@@ -135,7 +135,7 @@ class CustomLogger:
             is_only=False):
         handler = logging.handlers.RotatingFileHandler(
             filename=out_path, maxBytes=max_bytes, backupCount=backup_count)
-        fmt = fmt or CustomLogger.fileLogFmt
+        fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
 
     def addRunRotatingHandler(  # {{{2
@@ -145,9 +145,9 @@ class CustomLogger:
             out_path=None,
             fmt=None,
             is_only=False):
-        out_path = out_path or CustomLogger.logDirPath
+        out_path = out_path or self.logDirPath
         handler = RunRotatingHandler(out_path, backup_count)
-        fmt = fmt or CustomLogger.fileLogFmt
+        fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
 
 
