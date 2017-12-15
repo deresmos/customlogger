@@ -38,11 +38,6 @@ class CustomLogger:
     def debugMode(cls):
         cls.level = CustomLogger.DEBUG
 
-    # setLevel {{{2
-    @classmethod
-    def setLevel(cls, level):
-        cls.level = level
-
     # property {{{1
     @property
     def logger(self):
