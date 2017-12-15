@@ -17,7 +17,7 @@ class CustomLogger:
     ERROR = logging.ERROR
     CRITICAL = logging.CRITICAL
 
-    logFileName = 'all.log'
+    allLogFilePath = 'all.log'
     logDirPath = './log'
     streamLevel = WARNING
     isSaveLog = False
@@ -51,10 +51,10 @@ class CustomLogger:
     def setLogDirPath(cls, path):
         cls.logDirPath = path
 
-    # setLogFileName {{{2
+    # setAllLogFilePath {{{2
     @classmethod
-    def setLogFileName(cls, filename):
-        cls.logFileName = filename
+    def setAllLogFilePath(cls, filename):
+        cls.allLogFilePath = filename
 
     # setFileFmt {{{2
     @classmethod
@@ -144,8 +144,7 @@ class CustomLogger:
 
     def addFileHandler(  # {{{2
             self, level, out_path=None, fmt=None, is_only=False):
-        out_path = out_path or os.path.join(CustomLogger.logDirPath,
-                                            CustomLogger.logFileName)
+        out_path = out_path or CustomLogger.allLogFilePath
         handler = logging.FileHandler(out_path)
         fmt = fmt or CustomLogger.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
