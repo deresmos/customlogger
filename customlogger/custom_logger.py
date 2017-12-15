@@ -19,7 +19,7 @@ class CustomLogger:
 
     allLogFilePath = 'all.log'
     logDirPath = './log'
-    streamLevel = WARNING
+    level = WARNING
     isSaveLog = False
     backupCount = 5
     fileLogFmt = '%(asctime)s %(filename)s %(name)s '\
@@ -34,12 +34,12 @@ class CustomLogger:
 
     @classmethod
     def debugMode(cls):
-        cls.streamLevel = CustomLogger.DEBUG
+        cls.level = CustomLogger.DEBUG
 
-    # setStreamLevel {{{2
+    # setLevel {{{2
     @classmethod
-    def setStreamLevel(cls, level):
-        cls.streamLevel = level
+    def setLevel(cls, level):
+        cls.level = level
 
     # saveLog {{{2
     @classmethod
@@ -111,7 +111,7 @@ class CustomLogger:
     def defaultLoggerSetting(self):  # {{{2
         self.__logger.setLevel(CustomLogger.DEBUG)
         fmt = self.streamLogFmt
-        self.addStreamHandler(CustomLogger.streamLevel, fmt=fmt)
+        self.addStreamHandler(CustomLogger.level, fmt=fmt)
         self.addStreamHandler(
             CustomLogger.INFO, is_only=True, check_level=True)
 
@@ -136,7 +136,7 @@ class CustomLogger:
 
     def addStreamHandler(  # {{{2
             self, level, fmt=None, is_only=False, check_level=False):
-        if check_level and CustomLogger.streamLevel <= level:
+        if check_level and CustomLogger.level <= level:
             return
 
         handler = logging.StreamHandler()
@@ -180,7 +180,7 @@ class CustomLogger:
 #  main {{{1
 if __name__ == '__main__':
     CustomLogger.setLogDirPath('./log')
-    CustomLogger.setStreamLevel(CustomLogger.ERROR)
+    CustomLogger.setLevel(CustomLogger.ERROR)
     CustomLogger.saveLog()
     # CustomLogger.isSaveLog = True
     logger = CustomLogger()
