@@ -69,6 +69,9 @@ class CustomLogger:
     # property {{{1
     @property
     def logger(self):
+        if not self.__logger.handlers:
+            self.setLogger()
+
         return self.__logger
 
     # private functions {{{1
@@ -78,11 +81,7 @@ class CustomLogger:
         name = logger_name or type(name).__name__
         logger = logging.getLogger(name)
         self.__logger = logger
-
-        if self.__checkLoggerLists(logger) or not default:
-            return
-
-        self.defaultLoggerSetting()
+        self.__default = default
 
     @staticmethod  # __checkLoggerLists {{{2
     def __checkLoggerLists(logger):
@@ -103,6 +102,12 @@ class CustomLogger:
         print('Create log directory. ({})'.format(os.path.abspath(path)))
 
     # public functions {{{1
+    def setLogger(self):  # {{{2
+        if self.__checkLoggerLists(self.__logger) or not self.__default:
+            return
+
+        self.defaultLoggerSetting()
+
     def defaultLoggerSetting(self):  # {{{2
         self.__logger.setLevel(CustomLogger.DEBUG)
         fmt = self.streamLogFmt
