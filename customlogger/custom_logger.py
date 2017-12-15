@@ -18,7 +18,7 @@ class CustomLogger:
     ERROR = logging.ERROR
     CRITICAL = logging.CRITICAL
 
-    allLogFilePath = 'all.log'
+    allLogFileName = 'all.log'
     logDirPath = './log'
     level = WARNING
     isSaveLog = False
@@ -121,7 +121,7 @@ class CustomLogger:
 
     def addFileHandler(  # {{{2
             self, level, out_path=None, fmt=None, is_only=False):
-        out_path = expanduser(out_path or self.allLogFilePath)
+        out_path = expanduser(out_path or self.allLogFileName)
         handler = logging.FileHandler(out_path)
         fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
@@ -146,7 +146,8 @@ class CustomLogger:
             out_path=None,
             fmt=None,
             is_only=False):
-        out_path = expanduser(out_path or self.logDirPath)
+        out_path = expanduser(
+            out_path or os.path.join(self.logDirPath, self.allLogFileName))
         handler = RunRotatingHandler(out_path, backup_count)
         fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
