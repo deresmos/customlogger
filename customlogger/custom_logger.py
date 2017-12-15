@@ -27,6 +27,7 @@ class CustomLogger:
         '%(lineno)s %(levelname)s "%(message)s"'
     streamLogFmt = '[%(levelname)s: File "%(filename)s", ' \
         'line %(lineno)s, in %(funcName)s] "%(message)s"'
+    dateFmt = '%Y-%m-%d %a %H:%M:%S'
 
     __loggerLists = []
 
@@ -100,7 +101,7 @@ class CustomLogger:
             self, handler, level, fmt=None, datefmt=None, is_only=False):
         handler.setLevel(level)
 
-        datefmt = datefmt or '%Y-%m-%d %a %H:%M:%S'
+        datefmt = datefmt or self.dateFmt
         handler.setFormatter(logging.Formatter(fmt, datefmt))
 
         # set only filter
