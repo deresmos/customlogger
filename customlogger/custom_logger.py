@@ -41,31 +41,6 @@ class CustomLogger:
     def setLevel(cls, level):
         cls.level = level
 
-    # saveLog {{{2
-    @classmethod
-    def saveLog(cls):
-        cls.isSaveLog = True
-
-    # setLogDirPath {{{2
-    @classmethod
-    def setLogDirPath(cls, path):
-        cls.logDirPath = path
-
-    # setAllLogFilePath {{{2
-    @classmethod
-    def setAllLogFilePath(cls, filename):
-        cls.allLogFilePath = filename
-
-    # setFileFmt {{{2
-    @classmethod
-    def setFileFmt(cls, fmt):
-        cls.fileLogFmt = fmt
-
-    # setStreamFmt {{{2
-    @classmethod
-    def setStreamFmt(cls, fmt):
-        cls.streamLogFmt = fmt
-
     # property {{{1
     @property
     def logger(self):
@@ -179,10 +154,7 @@ class CustomLogger:
 
 #  main {{{1
 if __name__ == '__main__':
-    CustomLogger.setLogDirPath('./log')
     CustomLogger.setLevel(CustomLogger.ERROR)
-    CustomLogger.saveLog()
-    # CustomLogger.isSaveLog = True
     logger = CustomLogger()
     logger = logger.logger
     logger.error('aaa')
