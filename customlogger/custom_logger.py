@@ -94,8 +94,7 @@ class CustomLogger:
         if self.isSaveLog:
             self.__createLogDir()
             self.addFileHandler(CustomLogger.DEBUG)
-            self.addRunRotatingHandler(CustomLogger.DEBUG,
-                                       self.backupCount)
+            self.addRunRotatingHandler(CustomLogger.DEBUG, self.backupCount)
 
     def addHandler(  # {{{2
             self, handler, level, fmt=None, datefmt=None, is_only=False):
