@@ -20,7 +20,7 @@ class CustomLogger:
 
     allLogFileName = 'all.log'
     logDirPath = './log'
-    level = WARNING
+    streamLevel = WARNING
     isSaveLog = False
     backupCount = 5
     fileLogFmt = '%(asctime)s %(filename)s %(name)s '\
@@ -36,7 +36,7 @@ class CustomLogger:
 
     @classmethod
     def debugMode(cls):
-        cls.level = CustomLogger.DEBUG
+        cls.streamLevel = CustomLogger.DEBUG
 
     # property {{{1
     @property
@@ -83,7 +83,7 @@ class CustomLogger:
     def defaultLoggerSetting(self):  # {{{2
         self.__logger.setLevel(CustomLogger.DEBUG)
         fmt = self.streamLogFmt
-        self.addStreamHandler(self.level, fmt=fmt)
+        self.addStreamHandler(self.streamLevel, fmt=fmt)
         self.addStreamHandler(
             CustomLogger.INFO, is_only=True, check_level=True)
 
@@ -107,7 +107,7 @@ class CustomLogger:
 
     def addStreamHandler(  # {{{2
             self, level, fmt=None, is_only=False, check_level=False):
-        if check_level and self.level <= level:
+        if check_level and self.streamLevel <= level:
             return
 
         handler = logging.StreamHandler()
@@ -141,8 +141,7 @@ class CustomLogger:
             out_path=None,
             fmt=None,
             is_only=False):
-        out_path = expanduser(
-            out_path or os.path.join(self.logDirPath, self.allLogFileName))
+        out_path = expanduser(out_path or self.logDirPath)
         handler = RunRotatingHandler(out_path, backup_count)
         fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
