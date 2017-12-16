@@ -82,7 +82,7 @@ class CustomLogger:
         self.defaultLoggerSetting()
 
     def defaultLoggerSetting(self):  # {{{2
-        self.__logger.setLevel(CustomLogger.DEBUG)
+        self.__logger.setLevel(CustomLogger.NOTSET)
         fmt = self.streamLogFmt
         self.addStreamHandler(self.streamLevel, fmt=fmt)
         self.addStreamHandler(
@@ -91,7 +91,7 @@ class CustomLogger:
         if self.isSaveLog:
             self.__createLogDir(self.logDirPath)
             self.addFileHandler(self.fileLevel)
-            self.addRunRotatingHandler(CustomLogger.DEBUG, self.backupCount)
+            self.addRunRotatingHandler(CustomLogger.NOTSET, self.backupCount)
 
     def addHandler(  # {{{2
             self, handler, level, fmt=None, datefmt=None, is_only=False):
