@@ -21,6 +21,7 @@ class CustomLogger:
     allLogFileName = 'all.log'
     logDirPath = './log'
     streamLevel = WARNING
+    fileLevel = DEBUG
     isSaveLog = False
     backupCount = 5
     fileLogFmt = '%(asctime)s %(filename)s %(name)s '\
@@ -89,7 +90,7 @@ class CustomLogger:
 
         if self.isSaveLog:
             self.__createLogDir(self.logDirPath)
-            self.addFileHandler(CustomLogger.DEBUG)
+            self.addFileHandler(self.fileLevel)
             self.addRunRotatingHandler(CustomLogger.DEBUG, self.backupCount)
 
     def addHandler(  # {{{2
