@@ -38,6 +38,7 @@ Usage
   ```python
   from customlogger import CustomLogger
 
+  # All logger of CustomLogger is debug mode.
   CustomLogger.debugMode()
 
   logger = CustomLogger().logger
@@ -53,7 +54,9 @@ Usage
   ```python
   from customlogger import CustomLogger
 
-  CustomLogger.saveLog()
+  # All logger of CustomLogger save log file.
+  # Default output log file path is './log/'
+  CustomLogger.isSaveLog = True
 
   logger = CustomLogger().logger
   logger.debug('Debug message')
@@ -70,6 +73,8 @@ Usage
   custom_logger = CustomLogger()
 
   web_hooks = 'Your web hooks url'
+  # Default web_hooks get environment variable of 'WEBHOOK_URL'
+  # E.g. slack = SlackHandler()
   slack = SlackHandler(web_hooks)
   custom_logger.addHandler(slack, CustomLogger.INFO)
 
