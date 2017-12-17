@@ -73,6 +73,8 @@ Usage
   custom_logger = CustomLogger()
 
   web_hooks = 'Your web hooks url'
+  # Default web_hooks get environment variable of 'WEBHOOK_URL'
+  # E.g. slack = SlackHandler()
   slack = SlackHandler(web_hooks)
   custom_logger.addHandler(slack, CustomLogger.INFO)
 
