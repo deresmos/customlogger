@@ -38,7 +38,10 @@ class SlackHandler(logging.Handler):
         self.__webhook_url = webhook_url or os.getenv('WEBHOOK_URL')
         if not self.__webhook_url:
             print('WARN: Not found WEBHOOK_URL. SlackHandler not work.')
+            self.__isDisabled = True
             return None
+
+        self.__isDisabled = False
         self.__channel = channel
         self.__username = username
         self.__emojis = emojis or SlackHandler.EMOJIS
@@ -64,6 +67,9 @@ class SlackHandler(logging.Handler):
 
     def emit(self, record):  # {{{1
         try:
+            if self.__isDisabled:
+                return
+
             requests.post(self.__webhook_url, json=self.makeContent(record))
         except Exception:
             self.handleError(record)
