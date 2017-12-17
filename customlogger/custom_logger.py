@@ -52,7 +52,7 @@ class CustomLogger:
         name = logger_name or type(name).__name__
         logger = logging.getLogger(name)
         self.__logger = logger
-        self.is_default = is_default
+        self.isDefault = is_default
 
     @staticmethod  # __createLogDir {{{2
     def __createLogDir(path):
@@ -65,7 +65,7 @@ class CustomLogger:
 
     # public functions {{{1
     def setLogger(self):  # {{{2
-        if self.is_default:
+        if self.isDefault:
             self.defaultLoggerSetting()
 
     def defaultLoggerSetting(self):  # {{{2
