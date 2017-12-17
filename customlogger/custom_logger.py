@@ -47,12 +47,12 @@ class CustomLogger:
 
     # private functions {{{1
     def __init__(  # {{{2
-            self, parent=None, logger_name=None, default=True):
+            self, parent=None, logger_name=None, is_default=True):
         name = parent or self
         name = logger_name or type(name).__name__
         logger = logging.getLogger(name)
         self.__logger = logger
-        self.__default = default
+        self.is_default = is_default
 
     @staticmethod  # __createLogDir {{{2
     def __createLogDir(path):
@@ -65,10 +65,8 @@ class CustomLogger:
 
     # public functions {{{1
     def setLogger(self):  # {{{2
-        if not self.__default:
-            return
-
-        self.defaultLoggerSetting()
+        if self.is_default:
+            self.defaultLoggerSetting()
 
     def defaultLoggerSetting(self):  # {{{2
         self.__logger.setLevel(CustomLogger.DEBUG)
