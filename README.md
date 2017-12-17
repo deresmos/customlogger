@@ -53,7 +53,7 @@ Usage
   ```python
   from customlogger import CustomLogger
 
-  CustomLogger.saveLog()
+  CustomLogger.isSaveLog = True
 
   logger = CustomLogger().logger
   logger.debug('Debug message')
