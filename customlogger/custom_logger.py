@@ -99,7 +99,6 @@ class CustomLogger:
             return
 
         handler = logging.StreamHandler()
-        fmt = fmt or self.streamLogFmt
         self.addHandler(handler, level, fmt=fmt, is_only=is_only)
 
     def addFileHandler(  # {{{2
