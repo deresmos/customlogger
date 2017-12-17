@@ -37,6 +37,7 @@ class SlackHandler(logging.Handler):
         super().__init__()
         self.__webhook_url = webhook_url or os.getenv('WEBHOOK_URL')
         if not self.__webhook_url:
+            print('WARN: Not found WEBHOOK_URL. SlackHandler not work.')
             return None
         self.__channel = channel
         self.__username = username
