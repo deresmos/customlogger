@@ -106,7 +106,8 @@ class CustomLogger:
 
     def addFileHandler(  # {{{2
             self, level, out_path=None, fmt=None, is_only=False):
-        out_path = expanduser(out_path or self.allLogFileName)
+        out_path = expanduser(
+            out_path or os.path.join(self.logDirPath, self.allLogFileName))
         handler = logging.FileHandler(out_path)
         fmt = fmt or self.fileLogFmt
         self.addHandler(handler, level, fmt, is_only)
