@@ -40,7 +40,7 @@ class CustomLogger:
     # property {{{1
     @property
     def logger(self):
-        if not self.__logger.handlers:
+        if not self.__logger.handlers or self.__isFirstInitLogger:
             self.setLogger()
 
         return self.__logger
@@ -53,6 +53,9 @@ class CustomLogger:
         logger = logging.getLogger(name)
         self.__logger = logger
         self.isDefault = is_default
+        self.__isFirstInitLogger = True
+        if self.__logger.handlers:
+            self.__isFirstInitLogger = False
 
     @staticmethod  # __createLogDir {{{2
     def __createLogDir(path):
