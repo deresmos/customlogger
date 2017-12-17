@@ -38,6 +38,7 @@ Usage
   ```python
   from customlogger import CustomLogger
 
+  # All logger of CustomLogger is debug mode.
   CustomLogger.debugMode()
 
   logger = CustomLogger().logger
@@ -53,6 +54,8 @@ Usage
   ```python
   from customlogger import CustomLogger
 
+  # All logger of CustomLogger save log file.
+  # Default output log file path is './log/'
   CustomLogger.isSaveLog = True
 
   logger = CustomLogger().logger
