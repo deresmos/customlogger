@@ -30,8 +30,6 @@ class CustomLogger:
         'line %(lineno)s, in %(funcName)s] "%(message)s"'
     dateFmt = '%Y-%m-%d %a %H:%M:%S'
 
-    __loggerLists = []
-
     # class methods {{{1
     # debugMode {{{2
 
@@ -56,15 +54,6 @@ class CustomLogger:
         self.__logger = logger
         self.__default = default
 
-    @staticmethod  # __checkLoggerLists {{{2
-    def __checkLoggerLists(logger):
-        id_ = id(logger)
-        if id_ in CustomLogger.__loggerLists:
-            return True
-
-        CustomLogger.__loggerLists.append(id_)
-        return False
-
     @staticmethod  # __createLogDir {{{2
     def __createLogDir(path):
         path = expanduser(path)
@@ -76,7 +65,7 @@ class CustomLogger:
 
     # public functions {{{1
     def setLogger(self):  # {{{2
-        if self.__checkLoggerLists(self.__logger) or not self.__default:
+        if not self.__default:
             return
 
         self.defaultLoggerSetting()
