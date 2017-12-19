@@ -1,8 +1,9 @@
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0fa228df20ff45a395382faa50fd34c2)](https://www.codacy.com/app/deresmos/customlogger?utm_source=github.com&utm_medium=referral&utm_content=deresmos/customlogger&utm_campaign=badger)
-
 customlogger
 ==
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0fa228df20ff45a395382faa50fd34c2)](https://www.codacy.com/app/deresmos/customlogger?utm_source=github.com&utm_medium=referral&utm_content=deresmos/customlogger&utm_campaign=badger) [![Build Status](https://travis-ci.org/deresmos/customlogger.svg?branch=feature%2Ftest)](https://travis-ci.org/deresmos/customlogger)
+
+About
+--
 Easy use logging.
 
 
@@ -38,6 +39,7 @@ Usage
   ```python
   from customlogger import CustomLogger
 
+  # All logger of CustomLogger is debug mode.
   CustomLogger.debugMode()
 
   logger = CustomLogger().logger
@@ -53,7 +55,9 @@ Usage
   ```python
   from customlogger import CustomLogger
 
-  CustomLogger.saveLog()
+  # All logger of CustomLogger save log file.
+  # Default output log file path is './log/'
+  CustomLogger.isSaveLog = True
 
   logger = CustomLogger().logger
   logger.debug('Debug message')
@@ -70,6 +74,8 @@ Usage
   custom_logger = CustomLogger()
 
   web_hooks = 'Your web hooks url'
+  # Default web_hooks get environment variable of 'WEBHOOK_URL'
+  # E.g. slack = SlackHandler()
   slack = SlackHandler(web_hooks)
   custom_logger.addHandler(slack, CustomLogger.INFO)
 

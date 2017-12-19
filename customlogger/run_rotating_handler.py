@@ -25,7 +25,7 @@ class RunRotatingHandler(logging.FileHandler):
         # Get a pattern-matched log file names
         match_filenames = []
         # E.g. 2017-09-12_12-23-40.log
-        pattern = r'\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.log$'
+        pattern = r'\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2}.log$'
         log_files = sorted(glob.glob(os.path.join(dir_path, '*')))
         for log_file in log_files:
             match = re.findall(pattern, log_file)
@@ -36,7 +36,7 @@ class RunRotatingHandler(logging.FileHandler):
         backup_count = backup_count or RunRotatingHandler.__defaultBackupCount
         if len(match_filenames) >= backup_count:
             os.remove(match_filenames[0])
-        filename = datetime.today().strftime('%Y-%m-%d_%H-%M-%S')
+        filename = datetime.today().strftime('%Y-%m-%d_%H:%M:%S')
         filepath = os.path.join(dir_path, filename + '.log')
         print('Output the run rotating log file to [{}]'.format(
             os.path.abspath(filepath)))
@@ -45,11 +45,3 @@ class RunRotatingHandler(logging.FileHandler):
         return filepath
 
     # }}}1
-
-
-if __name__ == '__main__':  # {{{1
-    logger = logging.getLogger()
-    run_handler = RunRotatingHandler('test')
-    logger.addHandler(run_handler)
-    logger.setLevel(logging.DEBUG)
-    logger.info('aaa')
