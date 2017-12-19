@@ -7,4 +7,4 @@ install:
     - pip install pytest
     - pip install .
 script:
-    - pytest tests
+    - pytest -v tests
