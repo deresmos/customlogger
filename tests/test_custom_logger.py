@@ -2,6 +2,12 @@ import logging
 
 from customlogger import CustomLogger
 
+_defualt_fileLogFmt = '%(asctime)s %(filename)s %(name)s '\
+    '%(lineno)s %(levelname)s "%(message)s"'
+_default_streamLogFmt = '[%(levelname)s: File "%(filename)s", ' \
+    'line %(lineno)s, in %(funcName)s] "%(message)s"'
+_default_dateFmt = '%Y-%m-%d %a %H:%M:%S'
+
 
 def pytest_report_header(config):
     return 'custom_logger test'
@@ -14,11 +20,9 @@ def test_default_params():  # {{{1
     assert CustomLogger.fileLevel == CustomLogger.DEBUG
     assert CustomLogger.isSaveLog is False
     assert CustomLogger.backupCount == 5
-    assert CustomLogger.fileLogFmt == '%(asctime)s %(filename)s %(name)s '\
-        '%(lineno)s %(levelname)s "%(message)s"'
-    assert CustomLogger.streamLogFmt == '[%(levelname)s: File "%(filename)s", ' \
-        'line %(lineno)s, in %(funcName)s] "%(message)s"'
-    assert CustomLogger.dateFmt == '%Y-%m-%d %a %H:%M:%S'
+    assert CustomLogger.fileLogFmt == _defualt_fileLogFmt
+    assert CustomLogger.streamLogFmt == _default_streamLogFmt
+    assert CustomLogger.dateFmt == _default_dateFmt
 
 
 def test_default_logger():  # {{{1
