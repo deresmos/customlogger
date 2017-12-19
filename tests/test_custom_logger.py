@@ -12,7 +12,7 @@ def test_default_params():  # {{{1
     assert CustomLogger.logDirPath == './log'
     assert CustomLogger.streamLevel == CustomLogger.WARNING
     assert CustomLogger.fileLevel == CustomLogger.DEBUG
-    assert CustomLogger.isSaveLog == False
+    assert CustomLogger.isSaveLog is False
     assert CustomLogger.backupCount == 5
     assert CustomLogger.fileLogFmt == '%(asctime)s %(filename)s %(name)s '\
         '%(lineno)s %(levelname)s "%(message)s"'
