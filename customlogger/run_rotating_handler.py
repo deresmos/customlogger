@@ -45,11 +45,3 @@ class RunRotatingHandler(logging.FileHandler):
         return filepath
 
     # }}}1
-
-
-if __name__ == '__main__':  # {{{1
-    logger = logging.getLogger()
-    run_handler = RunRotatingHandler('test')
-    logger.addHandler(run_handler)
-    logger.setLevel(logging.DEBUG)
-    logger.info('aaa')
