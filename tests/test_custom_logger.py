@@ -1,7 +1,4 @@
-import io
 import logging
-
-import pytest
 
 from customlogger import CustomLogger
 
