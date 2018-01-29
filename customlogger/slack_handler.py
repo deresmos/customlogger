@@ -46,7 +46,7 @@ class SlackHandler(logging.Handler):
         self.__token = token
         self.__isDisabled = False
         self.__channel = channel
-        self.__username = username
+        self.__username = username or SlackHandler.USERNAMES
         self.__emojis = emojis or SlackHandler.EMOJIS
         self.__fmt = logging.Formatter(fmt)
 
@@ -62,8 +62,7 @@ class SlackHandler(logging.Handler):
             'icon_emoji': self.__emojis[record.levelno]
         }
 
-        content['username'] = self.__username or SlackHandler.USERNAMES[
-            record.levelno]
+        content['username'] = self.__username[record.levelno]
         if self.__channel:
             content['channel'] = self.__channel
 
