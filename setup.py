@@ -4,7 +4,7 @@ __author__ = 'deresmos'
 
 setup(
     name='customlogger',
-    version='0.2.4',
+    version='0.2.5',
     description='custom logger class.',
     author='deresmos',
     author_email='deresmos@gmail.com',
