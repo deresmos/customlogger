@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 
@@ -30,6 +31,7 @@ class SlackHandler(logging.Handler):
     def __init__(  # {{{1
             self,
             webhook_url=None,
+            token=None,
             channel=None,
             username=None,
             emojis=None,
@@ -41,6 +43,7 @@ class SlackHandler(logging.Handler):
             self.__isDisabled = True
             return None
 
+        self.__token = token
         self.__isDisabled = False
         self.__channel = channel
         self.__username = username
@@ -63,6 +66,12 @@ class SlackHandler(logging.Handler):
             record.levelno]
         if self.__channel:
             content['channel'] = self.__channel
+
+        if self.__token:
+            content['token'] = self.__token
+        else:
+            content = json.dumps(content)
+
         return content
 
     def emit(self, record):  # {{{1
@@ -70,7 +79,7 @@ class SlackHandler(logging.Handler):
             if self.__isDisabled:
                 return
 
-            requests.post(self.__webhook_url, json=self.makeContent(record))
+            requests.post(self.__webhook_url, data=self.makeContent(record))
         except Exception:
             self.handleError(record)
 
