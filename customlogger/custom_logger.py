@@ -24,8 +24,8 @@ class CustomLogger:
     fileLevel = DEBUG
     isSaveLog = False
     backupCount = 5
-    fileLogFmt = '%(asctime)s %(filename)s %(name)s '\
-        '%(lineno)s %(levelname)s "%(message)s"'
+    fileLogFmt = '%(asctime)s %(levelname)s %(filename)s %(name)s ' \
+        '%(lineno)s "%(message)s"'
     streamLogFmt = '[%(levelname)s: File "%(filename)s", ' \
         'line %(lineno)s, in %(funcName)s] "%(message)s"'
     dateFmt = '%Y-%m-%d %a %H:%M:%S'
