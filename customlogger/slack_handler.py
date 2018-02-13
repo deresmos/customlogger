@@ -6,8 +6,8 @@ import requests
 
 
 class SlackHandler(logging.Handler):
-    # EMOJIS {{{1
-    EMOJIS = {
+    # emojis {{{1
+    emojis = {
         logging.NOTSET: ':loudspeaker:',
         logging.DEBUG: ':simple_smile:',
         logging.INFO: ':smile:',
@@ -16,8 +16,8 @@ class SlackHandler(logging.Handler):
         logging.CRITICAL: ':scream:'
     }
 
-    # USERNAMES {{{1
-    USERNAMES = {
+    # usernames {{{1
+    usernames = {
         logging.NOTSET: 'Notset',
         logging.DEBUG: 'Debug',
         logging.INFO: 'Info',
@@ -33,7 +33,7 @@ class SlackHandler(logging.Handler):
             webhook_url=None,
             token=None,
             channel=None,
-            username=None,
+            usernames=None,
             emojis=None,
             fmt='[%(levelname)s] [%(asctime)s] [%(name)s] - %(message)s'):
         super().__init__()
@@ -46,23 +46,29 @@ class SlackHandler(logging.Handler):
         self.__token = token
         self.__isDisabled = False
         self.__channel = channel
-        self.__username = username or SlackHandler.USERNAMES
-        self.__emojis = emojis or SlackHandler.EMOJIS
+        self.__usernames = usernames if token else SlackHandler.User
+        self.__emojis = emojis if token else SlackHandler.emojis
         self.__fmt = logging.Formatter(fmt)
 
     def setEmoji(self, levelno, emoji):  # {{{1
+        if not self.__emojis:
+            self.__emojis = self.emojis
         self.__emojis[levelno] = emoji
 
     def setUsernames(self, levelno, username):  # {{{1
-        self.__username[levelno] = username
+        if not self.__usernames:
+            self.__usernames = self.usernames
+        self.__usernames[levelno] = username
 
     def makeContent(self, record):  # {{{1
         content = {
             'text': self.format(record),
-            'icon_emoji': self.__emojis[record.levelno]
         }
 
-        content['username'] = self.__username[record.levelno]
+        if self.__emojis:
+            content['icon_emoji'] = self.__emojis[record.levelno]
+        if self.__usernames:
+            content['username'] = self.__usernames[record.levelno]
         if self.__channel:
             content['channel'] = self.__channel
 
