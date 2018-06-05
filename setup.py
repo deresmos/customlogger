@@ -12,4 +12,7 @@ setup(
     include_package_data=False,
     keywords=['logging', 'Logger', 'custom'],
     license='MIT License',
-    install_requires=['requests', ])
+    install_requires=[
+        'requests',
+        'colorlog',
+    ])
