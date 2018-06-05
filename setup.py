@@ -4,7 +4,7 @@ __author__ = 'deresmos'
 
 setup(
     name='customlogger',
-    version='0.2.8',
+    version='0.3.0',
     description='custom logger class.',
     author='deresmos',
     author_email='deresmos@gmail.com',
@@ -12,4 +12,7 @@ setup(
     include_package_data=False,
     keywords=['logging', 'Logger', 'custom'],
     license='MIT License',
-    install_requires=['requests', ])
+    install_requires=[
+        'requests',
+        'colorlog',
+    ])
