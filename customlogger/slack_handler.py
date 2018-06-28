@@ -35,7 +35,9 @@ class SlackHandler(logging.Handler):
             channel=None,
             usernames=None,
             emojis=None,
-            fmt='[%(levelname)s] [%(asctime)s] [%(name)s] - %(message)s'):
+            fmt='[%(levelname)s] [%(asctime)s] [%(name)s] - %(message)s',
+            as_user=False,
+    ):
         super().__init__()
         self.__webhook_url = webhook_url or os.getenv('WEBHOOK_URL')
         if not self.__webhook_url:
@@ -49,6 +51,7 @@ class SlackHandler(logging.Handler):
         self.__usernames = usernames if token else SlackHandler.User
         self.__emojis = emojis if token else SlackHandler.emojis
         self.__fmt = logging.Formatter(fmt)
+        self.__as_user = as_user
 
     def setEmoji(self, levelno, emoji):  # {{{1
         if not self.__emojis:
@@ -71,6 +74,8 @@ class SlackHandler(logging.Handler):
             content['username'] = self.__usernames[record.levelno]
         if self.__channel:
             content['channel'] = self.__channel
+        if self.__as_user:
+            content['as_user'] = self.__as_user
 
         if self.__token:
             content['token'] = self.__token
