@@ -1,6 +1,7 @@
 # imports {{{1
 import logging
 import os
+from datetime import datetime
 from os.path import expanduser
 
 from colorlog import ColoredFormatter
@@ -21,7 +22,7 @@ class CustomLogger:
     CRITICAL = logging.CRITICAL
 
     allLogFileName = 'all.log'
-    logDirPath = './log'
+    _logDirPath = './log'
     streamLevel = WARNING
     fileLevel = DEBUG
     isSaveLog = False
@@ -60,6 +61,16 @@ class CustomLogger:
 
         return self.__logger
 
+    @property
+    def logDirPath(self):
+        return self._logDirPath
+
+    @logDirPath.setter
+    def logDirPath(self, path):
+        path = expanduser(path)
+        path = datetime.now().strftime(path)
+        self._logDirPath = path
+
     # private functions {{{1
     def __init__(  # {{{2
             self, parent=None, logger_name=None, is_default=True):
@@ -78,8 +89,7 @@ class CustomLogger:
         if os.path.isdir(path):
             return
 
-        os.mkdir(path)
-        print('Create log directory. ({})'.format(os.path.abspath(path)))
+        os.makedirs(path)
 
     # public functions {{{1
     def setLogger(self):  # {{{2

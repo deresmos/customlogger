@@ -19,7 +19,7 @@ def pytest_report_header(config):
 
 def test_default_params():  # {{{1
     assert CustomLogger.allLogFileName == 'all.log'
-    assert CustomLogger.logDirPath == './log'
+    assert CustomLogger._logDirPath == './log'
     assert CustomLogger.streamLevel == CustomLogger.WARNING
     assert CustomLogger.fileLevel == CustomLogger.DEBUG
     assert CustomLogger.isSaveLog is False
