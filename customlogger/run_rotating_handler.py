@@ -1,47 +1,53 @@
-# imports {{{
 import glob
-import logging
 import os
-import re
 from datetime import datetime
+from logging import FileHandler
 
-# }}}
 
-
-class RunRotatingHandler(logging.FileHandler):
-    __rotatingFilePath = None
+class RunRotatingHandler(FileHandler):
+    __filepath = None
     __defaultBackupCount = 3
+    __defaultLogFmt = '%Y%m%d_%H%M%S.log'
 
-    def __init__(self, dir_path, backup_count=None):  # {{{1
-        filepath = self.__getRotatingFilePath(dir_path, backup_count)
+    def __init__(self, dirpath, backup_count=None, fmt=None):
+        fmt = fmt or self.__defaultLogFmt
+        backup_count = backup_count or RunRotatingHandler.__defaultBackupCount
+
+        filepath = self.getFilepath(dirpath, fmt, backup_count)
+
         super().__init__(filepath)
 
-    @staticmethod  # __getRotatingFilePath {{{1
-    def __getRotatingFilePath(dir_path, backup_count=None):
-        # If set roting file path, return the filepath
-        if RunRotatingHandler.__rotatingFilePath:
-            return RunRotatingHandler.__rotatingFilePath
+    def getFilepath(self, dirpath, fmt, backup_count):
+        # If already set filepath, return the filepath
+        if RunRotatingHandler.__filepath:
+            return RunRotatingHandler.__filepath
 
-        # Get a pattern-matched log file names
-        match_filenames = []
-        # E.g. 2017-09-12_12-23-40.log
-        pattern = r'\d{4}\d{2}\d{2}_\d{2}\d{2}\d{2}.log$'
-        log_files = sorted(glob.glob(os.path.join(dir_path, '*')))
-        for log_file in log_files:
-            match = re.findall(pattern, log_file)
-            if len(match):
-                match_filenames.append(log_file)
+        # Set the logfile name
+        fmt = os.path.join(dirpath, fmt)
+        filepath = datetime.today().strftime(fmt)
+        dirname = os.path.dirname(filepath)
 
-        # Delete old file, then set a new filepath
-        backup_count = backup_count or RunRotatingHandler.__defaultBackupCount
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+
+        # Get file list matching format
+        match_filenames = [
+            x for x in sorted(glob.glob(os.path.join(dirname, '*')))
+            if self.isMatchLogFmt(x, fmt)
+        ]
+
+        # Delete the old file and set a new file path
         if len(match_filenames) >= backup_count:
             os.remove(match_filenames[0])
-        filename = datetime.today().strftime('%Y%m%d_%H%M%S')
-        filepath = os.path.join(dir_path, filename + '.log')
-        print('Output the run rotating log file to [{}]'.format(
-            os.path.abspath(filepath)))
 
-        RunRotatingHandler.__rotatingFilePath = filepath
+        RunRotatingHandler.__filepath = filepath
         return filepath
 
-    # }}}1
+    @staticmethod
+    def isMatchLogFmt(date_string, date_fmt):
+        try:
+            datetime.strptime(date_string, date_fmt)
+        except ValueError:
+            return False
+
+        return True
