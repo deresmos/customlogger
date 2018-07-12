@@ -5,8 +5,8 @@ from os.path import expanduser
 
 from colorlog import ColoredFormatter
 
-from customlogger.only_filter import OnlyFilter
-from customlogger.run_rotating_handler import RunRotatingHandler
+from .only_filter import OnlyFilter
+from .run_rotating_handler import RunRotatingHandler
 
 
 class CustomLogger:
@@ -21,8 +21,8 @@ class CustomLogger:
     _LOG_DIRPATH = './log'
     _STREAM_LEVEL = WARNING
     _FILE_LEVEL = DEBUG
-    isSaveLog = False
-    isColorLog = True
+    _isSaveLog = False
+    _isColorLog = True
     _BACKUP_COUNT = 5
 
     _FILE_FMT = ('%(asctime)s %(levelname)s %(filename)s %(name)s '
@@ -36,7 +36,7 @@ class CustomLogger:
                                'in %(funcName)s] "%(message)s"')
     _DATE_FMT = '%Y-%m-%d %a %H:%M:%S'
 
-    logColors = {
+    _LOG_COLORS = {
         'DEBUG': 'cyan',
         'INFO': 'green',
         'WARNING': 'yellow',
@@ -47,6 +47,10 @@ class CustomLogger:
     @classmethod
     def debugMode(cls):
         cls._STREAM_LEVEL = CustomLogger.DEBUG
+
+    @classmethod
+    def saveLog(cls):
+        cls._isSaveLog = True
 
     @classmethod
     def backupCount(cls, value):
@@ -61,13 +65,13 @@ class CustomLogger:
 
     @property
     def logDirPath(self):
-        return self.log_dirpath
+        return self._logDirPath
 
     @logDirPath.setter
     def logDirPath(self, path):
         path = expanduser(path)
         path = datetime.now().strftime(path)
-        self.log_dirpath = path
+        self._logDirPath = path
 
     def __init__(
             self,
@@ -75,6 +79,8 @@ class CustomLogger:
             logger_name=None,
             is_default=True,
             is_debug=False,
+            is_save_log=False,
+            is_color_log=False,
             *,
             stream_level=None,
             backup_count=None,
@@ -85,20 +91,22 @@ class CustomLogger:
         logger = logging.getLogger(name)
         self.__logger = logger
 
-        self.stream_level = stream_level or CustomLogger._STREAM_LEVEL
-        self.backup_count = backup_count or CustomLogger._BACKUP_COUNT
-        self.log_dirpath = log_dirpath or CustomLogger._LOG_DIRPATH
+        self.streamLevel = stream_level or CustomLogger._STREAM_LEVEL
+        self.backupCount = backup_count or CustomLogger._BACKUP_COUNT
+        self._logDirPath = log_dirpath or CustomLogger._LOG_DIRPATH
+        self.isSaveLog = is_save_log or CustomLogger._isSaveLog
+        self.isColorLog = is_color_log or CustomLogger._isColorLog
 
         self.is_default = is_default
         if is_debug:
-            self.stream_level = self.DEBUG
+            self.streamLevel = self.DEBUG
 
         self.__isFirstInitLogger = True
         if self.__logger.handlers:
             self.__isFirstInitLogger = False
 
     @staticmethod
-    def __createLogDir(path):
+    def _createLogDir(path):
         path = expanduser(path)
         if os.path.isdir(path):
             return
@@ -112,26 +120,26 @@ class CustomLogger:
     def defaultLoggerSetting(self):
         self.__logger.setLevel(CustomLogger.DEBUG)
         if self.isColorLog:
-            if self.stream_level <= self.DEBUG:
+            if self.streamLevel <= self.DEBUG:
                 fmt = self._STREAM_COLOR_DEBUG_FMT
             else:
                 fmt = self._STREAM_COLOR_FMT
 
-            self.addStreamColorHandler(self.stream_level, fmt=fmt)
+            self.addStreamColorHandler(self.streamLevel, fmt=fmt)
         else:
-            if self.stream_level <= self.DEBUG:
+            if self.streamLevel <= self.DEBUG:
                 fmt = self._STREAM_DEBUG_FMT
             else:
                 fmt = self._STREAM_FMT
 
-            self.addStreamHandler(self.stream_level, fmt=fmt)
+            self.addStreamHandler(self.streamLevel, fmt=fmt)
 
         self.addStreamHandler(
             CustomLogger.INFO, is_only=True, check_level=True)
         if self.isSaveLog:
-            self.__createLogDir(self.log_dirpath)
+            self._createLogDir(self._logDirPath)
             self.addFileHandler(self._FILE_LEVEL)
-            self.addRunRotatingHandler(CustomLogger.DEBUG, self.backup_count)
+            self.addRunRotatingHandler(CustomLogger.DEBUG, self.backupCount)
 
     def addHandler(
             self,
@@ -154,47 +162,59 @@ class CustomLogger:
 
         self.__logger.addHandler(handler)
 
-    def addStreamHandler(self,
-                         level,
-                         fmt=None,
-                         is_only=False,
-                         check_level=False):
-        if check_level and self.stream_level <= level:
+    def addStreamHandler(
+            self,
+            level,
+            fmt=None,
+            is_only=False,
+            check_level=False,
+    ):
+        if check_level and self.streamLevel <= level:
             return
 
         handler = logging.StreamHandler()
         self.addHandler(handler, level, fmt=fmt, is_only=is_only)
 
-    def addStreamColorHandler(self,
-                              level,
-                              fmt=None,
-                              is_only=False,
-                              check_level=False):
-        if check_level and self.stream_level <= level:
+    def addStreamColorHandler(
+            self,
+            level,
+            fmt=None,
+            is_only=False,
+            check_level=False,
+    ):
+        if check_level and self.streamLevel <= level:
             return
 
         handler = logging.StreamHandler()
         formatter = ColoredFormatter(
             fmt,
-            log_colors=self.logColors,
+            log_colors=self._LOG_COLORS,
             style='%',
         )
         self.addHandler(handler, level, is_only=is_only, formatter=formatter)
 
-    def addFileHandler(self, level, out_path=None, fmt=None, is_only=False):
+    def addFileHandler(
+            self,
+            level,
+            out_path=None,
+            fmt=None,
+            is_only=False,
+    ):
         out_path = expanduser(
-            out_path or os.path.join(self.log_dirpath, self._ALL_LOG_FILENAME))
+            out_path or os.path.join(self._logDirPath, self._ALL_LOG_FILENAME))
         handler = logging.FileHandler(out_path)
         fmt = fmt or self._FILE_FMT
         self.addHandler(handler, level, fmt, is_only)
 
-    def addRotatingFileHandler(self,
-                               level,
-                               out_path,
-                               max_bytes,
-                               backup_count,
-                               fmt=None,
-                               is_only=False):
+    def addRotatingFileHandler(
+            self,
+            level,
+            out_path,
+            max_bytes,
+            backup_count,
+            fmt=None,
+            is_only=False,
+    ):
         handler = logging.handlers.RotatingFileHandler(
             filename=out_path,
             maxBytes=max_bytes,
@@ -203,13 +223,15 @@ class CustomLogger:
         fmt = fmt or self._FILE_FMT
         self.addHandler(handler, level, fmt, is_only)
 
-    def addRunRotatingHandler(self,
-                              level,
-                              backup_count,
-                              out_path=None,
-                              fmt=None,
-                              is_only=False):
-        out_path = expanduser(out_path or self.log_dirpath)
+    def addRunRotatingHandler(
+            self,
+            level,
+            backup_count,
+            out_path=None,
+            fmt=None,
+            is_only=False,
+    ):
+        out_path = expanduser(out_path or self._logDirPath)
         handler = RunRotatingHandler(out_path, backup_count)
         fmt = fmt or self._FILE_FMT
         self.addHandler(handler, level, fmt, is_only)
