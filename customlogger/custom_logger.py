@@ -60,6 +60,7 @@ class CustomLogger:
     def logger(self):
         if not self.__logger.handlers or self.__isFirstInitLogger:
             self.setLogger()
+            self.__isFirstInitLogger = False
 
         return self.__logger
 
