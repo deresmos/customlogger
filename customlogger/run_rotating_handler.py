@@ -1,53 +1,71 @@
-import glob
 import os
-from datetime import datetime
+from datetime import datetime as dt
+from glob import glob
 from logging import FileHandler
+from pathlib import Path
+from time import sleep
+
+
+class _FILE_PATH(object):
+    def __init__(self, dirname, basename):
+        self.dirname = dirname
+        self.basename = basename
+        self.path = dt.today().strftime(str(Path(dirname) / basename))
+
+    def __eq__(self, other):
+        if not isinstance(other, _FILE_PATH):
+            raise NotImplemented
+
+        return other.dirname == self.dirname
+
+    def __str__(self):
+        return self.path
 
 
 class RunRotatingHandler(FileHandler):
-    __filepath = None
-    __defaultBackupCount = 3
-    __defaultLogFmt = '%Y%m%d_%H%M%S.log'
+    LOG_FMT = '%Y%m%d_%H%M%S.log'
+    BACKUP_COUNT = 5
 
-    def __init__(self, dirpath, backup_count=None, fmt=None):
-        fmt = fmt or self.__defaultLogFmt
-        backup_count = backup_count or RunRotatingHandler.__defaultBackupCount
+    _files = []
 
-        filepath = self.getFilepath(dirpath, fmt, backup_count)
+    def __init__(self, dirname, backup_count=None, fmt=None, **kwargs):
+        fmt = fmt or self.LOG_FMT
+        backup_count = backup_count or self.BACKUP_COUNT
 
-        super().__init__(filepath)
+        self.filepath = self._load_file_path(dirname, fmt, backup_count)
 
-    def getFilepath(self, dirpath, fmt, backup_count):
-        # If already set filepath, return the filepath
-        if RunRotatingHandler.__filepath:
-            return RunRotatingHandler.__filepath
+        super().__init__(self.filepath, **kwargs)
 
+    def _open(self):
+        path_parent = Path(self.filepath).parent
+        if not path_parent.is_dir():
+            os.makedirs(path_parent)
+
+        super()._open()
+
+    def _load_file_path(self, dirname, fmt, backup_count):
         # Set the logfile name
-        fmt = os.path.join(dirpath, fmt)
-        filepath = datetime.today().strftime(fmt)
-        dirname = os.path.dirname(filepath)
+        path = _FILE_PATH(dirname, fmt)
+        filepath = Path(str(path))
 
-        if not os.path.isdir(dirname):
-            os.makedirs(dirname)
+        # If already same dirname, return the filepath
+        for fpath in RunRotatingHandler._files:
+            if fpath == path:
+                return str(fpath)
 
         # Get file list matching format
-        match_filenames = [
-            x for x in sorted(glob.glob(os.path.join(dirname, '*')))
-            if self.isMatchLogFmt(x, fmt)
-        ]
+        filenames = sorted(filepath.parent.glob('*'))
 
         # Delete the old file and set a new file path
-        if len(match_filenames) >= backup_count:
-            os.remove(match_filenames[0])
+        if len(filenames) >= backup_count:
+            os.remove(filenames[0])
 
-        RunRotatingHandler.__filepath = filepath
-        return filepath
+        RunRotatingHandler._files.append(path)
+        return str(path)
 
-    @staticmethod
-    def isMatchLogFmt(date_string, date_fmt):
-        try:
-            datetime.strptime(date_string, date_fmt)
-        except ValueError:
-            return False
 
-        return True
+if __name__ == '__main__':
+    test = RunRotatingHandler('log')
+    sleep(1)
+    test = RunRotatingHandler('log')
+    test = RunRotatingHandler('logg')

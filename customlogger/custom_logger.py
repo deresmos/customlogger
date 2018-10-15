@@ -103,8 +103,6 @@ class CustomLogger:
             self.streamLevel = self.DEBUG
 
         self.__isFirstInitLogger = True
-        if self.__logger.handlers:
-            self.__isFirstInitLogger = False
 
     @staticmethod
     def _createLogDir(path):
